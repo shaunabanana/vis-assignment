@@ -79,29 +79,9 @@ function drawCircles(dataset, xScale, yScale, color) {
         .attr('clip-path', 'url(#clip)')
         .attr('fill', function (d) { return color( d[colorBy] ) })
 
-        .on('mouseover', function () {
-            var dot = d3.select(this);
-            //enlarge dot
-            dot.attr('r', 8);
-            dot.attr('stroke-width', '1.5')
-            //move tooltip
-            tooltip.style('left', dot.attr('cx') + 'px');
-            tooltip.style('top', dot.attr('cy') - 10 + 'px');
-            tooltip.select('span').text(dot.data()[0][tooltipBy]);
-            tooltip.style('display', 'block');
-            //change cursor
-            graph.style('cursor', 'pointer');
-        })
-        .on('mouseout', function () {
-            var dot = d3.select(this)
-            //shrink dot
-            dot.attr('r', 5);
-            dot.attr('stroke-width', '1')
-            //remove tooltip
-            tooltip.style('display', 'none')
-            //change cursor
-            graph.style('cursor', 'default')
-        })
+        .on('mouseover', onCircleMouseOver)
+        .on('mouseout', onCircleMouseOut)
+        .on('click', onCircleClick)
 }
 
 
@@ -137,27 +117,7 @@ function populateDropdown(dataset, selector, attribute) {
         })
         .text(function (d) { return d; });
 
-    d3.selectAll(selector).on('change', function () {
-        xAttribute = d3.select('select.x').property('value');
-        yAttribute = d3.select('select.y').property('value');
-        d3.select('div.intro p.description span.x').text(xAttribute);
-        d3.select('div.intro p.description span.y').text(yAttribute);
-        updateAxes(xAttribute, yAttribute);
-    })
-}
-
-
-function handleZoom() {
-    // Create new scale ojects based on event
-    var new_xScale = d3.event.transform.rescaleX(xScale);
-    var new_yScale = d3.event.transform.rescaleY(yScale);
-    // Update axes
-    graph.select('g.axis.x').call(xAxis.scale(new_xScale));
-    graph.select('g.axis.y').call(yAxis.scale(new_yScale));
-
-    graph.selectAll('circle').data(dataset)
-        .attr('cx', function(d) {return new_xScale(d.__x)})
-        .attr('cy', function(d) {return new_yScale(d.__y) - 20});
+    d3.selectAll(selector).on('change', onChangeAxes)
 }
 
 
@@ -165,7 +125,8 @@ function createZoom() {
     zoom = d3.zoom()
         .scaleExtent([.5, 20])
         .extent([[xTransform, 0], [graphWidth - 120, graphHeight]])
-        .on("zoom", handleZoom);
+        .on('zoom', onZoom)
+        .on('end', onZoomEnd);
     
     graph.append("defs").append('clipPath')
         .attr('id', 'clip')

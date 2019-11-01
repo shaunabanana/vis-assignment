@@ -57,7 +57,7 @@ d3.csv('countries_of_world.csv').then(function (data) {
     );
     xAxis = d3.axisBottom(xScale);
     yAxis = d3.axisLeft(yScale);
-    
+
     // Define colors
     var color = d3.scaleOrdinal()
         .domain( gatherAxis(dataset, colorBy) )
