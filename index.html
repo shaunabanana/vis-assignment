@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Assignment #1 - Scatter Plot</title>
+
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/vis.css">
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+    <div id="vis">
+        <div class="intro">
+            <h1>Countries of the World</h1>
+            <p class="description">A visualization of country statistics from 169 different countries/regions around the world, showcasing their <span class="x">Birth Rate</span> and <span class="y">Death Rate</span>.</p>
+            <p class="axis">
+                <span class="left">
+                    X Axis: 
+                    <select class="x"></select>
+                </span>
+
+                <span class="right">
+                    Y Axis: 
+                    <select class="y"></select>
+                </span>
+            </p>
+        </div>
+
+        <div class="vis">
+            <svg class="graph"></svg>
+            <div class="legends"></div>
+            <div class="tooltip">
+                <span>Some tooltip</span>
+                <div class="triangle"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/vis.js"></script>
+    <script src="scripts/main.js"></script>
+    
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+/*
+div.scatter {
+    position: absolute;
+    width: calc(100% - 50px);
+    height: calc(100% - 50px);
+    right: 0px;
+    top: 0px;
+}
+*/
+
+svg.graph {
+    position: absolute;
+    /* background-color: yellow; */
+    /* border: 1px solid black; */
+    width: calc(100% - 120px);
+    height: calc(100%);
+    left: 0px;
+    top: 0px;
+}
+
+.legends {
+    position: absolute;
+    width: 120px;
+    height: calc(100%);
+    right: 0px;
+    top: 0px;
+    font-size: 14px;
+}
+
+.legend-circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    transform: translate(0, 50%);
+    border: 1px solid black;
+}
+
+.tooltip {
+    position: absolute;
+    border-radius: 5px;
+    background: white;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    font-size: 14px;
+    transform: translate(calc(-50% - 2px), calc(-100% - 7px));
+    display: none;
+}
+
+.triangle {
+    position: relative;
+}
+.triangle::after{
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    left: 50%;
+    box-sizing: border-box;
+    border: 5px solid black;
+    border-color: transparent transparent white white;
+    transform-origin: 0 0;
+    transform: translate(-50%, 100%) rotate(-45deg);
+    box-shadow: -3px 5px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+.circle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
