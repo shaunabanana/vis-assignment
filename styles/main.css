@@ -23,6 +23,14 @@ div.intro {
     font-size: 14px;
 }
 
+.intro p.axis span {
+    margin-right: 30px;
+}
+
+.intro p.axis span select {
+    font-size: 14px;
+}
+
 div.vis {
     position: absolute;
     background-color: #fff;
@@ -30,4 +38,14 @@ div.vis {
     height: 550px;
     left: 50%;
     transform: translate(-50%, 0);
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Opera and Firefox */
 }
