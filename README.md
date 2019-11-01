@@ -12,6 +12,15 @@ All code are in `scripts` folder. `main.js` is the entry point, while other file
 `utils.js` contains code for data processing.
 
 ## TODO
-- [ ] Fix bug caused by drawAxes and d3.zoom not sharing the same axis & scale variable.
-- [ ] Remove point on click.
+- [X] General scatter plot (vertical axis, horizontal axis, data points).
+- [ ] Axis names
 - [ ] Show percentage for percentage attributes.
+- [X] Legends & color coding by region.
+- [X] Tooltips for country names.
+- [X] Change axes.
+- [X] Animated changes.
+- [X] Hover enlarge interaction.
+- [X] Zooming/panning.
+- [X] Fix bug in zooming/panning when changing axes.
+- [ ] Remove point on click.
+
