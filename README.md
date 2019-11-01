@@ -22,5 +22,5 @@ All code are in `scripts` folder. `main.js` is the entry point, while other file
 - [X] Hover enlarge interaction.
 - [X] Zooming/panning.
 - [X] Fix bug in zooming/panning when changing axes.
-- [ ] Remove point on click.
+- [X] Remove point on click.
 
