@@ -15,8 +15,8 @@ All code are in `scripts` folder. `main.js` is the entry point, while other file
 
 ## TODO
 - [X] General scatter plot (vertical axis, horizontal axis, data points).
-- [ ] Axis names
-- [ ] Show percentage for percentage attributes.
+- [X] Axis names
+- [X] Show percentage for percentage attributes.
 - [X] Legends & color coding by region.
 - [X] Tooltips for country names.
 - [X] Change axes.
