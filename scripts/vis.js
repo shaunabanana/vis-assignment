@@ -13,16 +13,56 @@ function createScale(dataset, attribute, direction='default', maxlen=0, padding=
 }
 
 
-function drawAxes(xScale, yScale) {
-    graph.selectAll('g.axis').remove(); // Remove existing axes if there is any
+function drawAxes(xAxis, yAxis) {
     graph.append('g')
-        .attr('class', 'axis')
+        .attr('class', 'axis y')
         .attr('transform', 'translate(' + xTransform + ", -" + yTransform + ')')
-        .call( d3.axisLeft(yScale) );
+        .call( yAxis );
     graph.append('g')
-        .attr('class', 'axis')
+        .attr('class', 'axis x')
         .attr('transform', 'translate(0, ' + (graphHeight - yTransform) + ')')
-        .call( d3.axisBottom(xScale) );
+        .call( xAxis );
+}
+
+
+function updateAxes(xAttribute, yAttribute) {
+    // Reset zoom level first to prevent problems
+    graph.select('rect#zoom').transition().duration(600).call(
+        zoom.transform,
+        d3.zoomIdentity.translate(0, 0).scale(1)
+    ).on('end', function () {
+        // Create updated scales and axes
+        var new_xScale = createScale(
+            dataset, xAttribute, 
+            direction="default",
+            maxlen=graphWidth,
+            padding=xTransform
+        );
+        var new_yScale = createScale(
+            dataset, yAttribute, 
+            direction="reversed",
+            maxlen=graphHeight, 
+            padding=yTransform
+        );
+
+        // Animate update of axes
+        graph.select('g.axis.x').transition().duration(600).call(xAxis.scale(new_xScale));
+        graph.select('g.axis.y').transition().duration(600).call(yAxis.scale(new_yScale));
+
+        // Update data and play animations
+        dataset = setXY(dataset, xAttribute, yAttribute);
+        graph.selectAll('circle').transition()
+            .duration(600)
+            .attr('cx', function (d) { return new_xScale(d.__x) } )
+            .attr('cy', function (d) { return new_yScale(d.__y) - yTransform })
+            .on('end', function() {
+                xScale = new_xScale;
+                yScale = new_yScale;
+                xAxis = d3.axisBottom(new_xScale);
+                yAxis = d3.axisLeft(new_yScale);
+            })
+    })
+    
 }
 
 
@@ -75,37 +115,6 @@ function drawLegends(dataset, color) {
 }
 
 
-function updateAxes(xAttribute, yAttribute) {
-    xAttribute = xAttribute;
-    yAttribute = yAttribute;
-
-    // Recreate axes
-    var xScale = createScale(
-        dataset, 
-        xAttribute, 
-        direction="default",
-        maxlen=graphWidth,
-        padding=xTransform
-    );
-
-    var yScale = createScale(
-        dataset, 
-        yAttribute, 
-        direction="reversed",
-        maxlen=graphHeight, 
-        padding=yTransform
-    );
-    drawAxes(xScale, yScale);
-
-    // Update data and play animations
-    dataset = setXY(dataset, xAttribute, yAttribute);
-    graph.selectAll('circle').transition()
-        .duration(600)
-        .attr('cx', function (d) { return xScale(d.__x) } )
-        .attr('cy', function (d) { return yScale(d.__y) - yTransform })
-}
-
-
 function populateDropdown(dataset, selector, attribute) {
     // Obtain numeric keys
     var dropdownItems = [];
@@ -135,4 +144,42 @@ function populateDropdown(dataset, selector, attribute) {
         d3.select('div.intro p.description span.y').text(yAttribute);
         updateAxes(xAttribute, yAttribute);
     })
+}
+
+
+function handleZoom() {
+    // Create new scale ojects based on event
+    var new_xScale = d3.event.transform.rescaleX(xScale);
+    var new_yScale = d3.event.transform.rescaleY(yScale);
+    // Update axes
+    graph.select('g.axis.x').call(xAxis.scale(new_xScale));
+    graph.select('g.axis.y').call(yAxis.scale(new_yScale));
+
+    graph.selectAll('circle').data(dataset)
+        .attr('cx', function(d) {return new_xScale(d.__x)})
+        .attr('cy', function(d) {return new_yScale(d.__y) - 20});
+}
+
+
+function createZoom() {
+    zoom = d3.zoom()
+        .scaleExtent([.5, 20])
+        .extent([[xTransform, 0], [graphWidth - 120, graphHeight]])
+        .on("zoom", handleZoom);
+    
+    graph.append("defs").append('clipPath')
+        .attr('id', 'clip')
+        .append('rect')
+            .attr('width', graphWidth)
+            .attr('height', graphHeight)
+            .attr('transform', 'translate(' + xTransform + ', -' + yTransform + ')')
+
+    graph.append("rect")
+        .attr('id', 'zoom')
+        .attr('width', graphWidth)
+        .attr('height', graphHeight)
+        .style('fill', 'none')
+        .style('pointer-events', 'all')
+        .attr('transform', 'translate(' + xTransform + ', -' + yTransform + ')')
+        .call(zoom);
 }
