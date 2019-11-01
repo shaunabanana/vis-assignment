@@ -9,6 +9,8 @@ All code are in `scripts` folder. `main.js` is the entry point, while other file
 
 `vis.js` contains code for visualization. Mostly D3 drawing code.
 
+`events.js` contains code for event handling i.e. interaction.
+
 `utils.js` contains code for data processing.
 
 ## TODO
