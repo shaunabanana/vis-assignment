@@ -20,17 +20,16 @@ var zoom;
 // Controls the spacing between points and axis
 var spacing = 20;
 // Controls the left and bottom margin of the graph
-var xTransform = 60;
+var xTransform = 65;
 var yTransform = 20;
-
 // Define colors and axis attributes here.
 var colorBy = 'Region';
 var tooltipBy = 'Country';
 var xAttribute = 'Birth Rate';
 var yAttribute = 'Death Rate';
-
-var context;
-
+// Which columns are supposed to be rendered as percentages
+var percentages = ['Birth Rate', 'Death Rate', 'Infant mortality', 'Literacy Rate', 'Agriculture', 'Industry', 'Service'];
+var percentagesAlready = ['Arable land (%)', 'Crops land (%)', 'Other land (%)'];
 
 
 d3.csv('countries_of_world.csv').then(function (data) {
@@ -55,8 +54,8 @@ d3.csv('countries_of_world.csv').then(function (data) {
         maxlen=graphHeight, 
         padding=yTransform
     );
-    xAxis = d3.axisBottom(xScale);
-    yAxis = d3.axisLeft(yScale);
+    xAxis = createAxis(d3.axisBottom, xScale, xAttribute);
+    yAxis = createAxis(d3.axisLeft, yScale, yAttribute);
 
     // Define colors
     var color = d3.scaleOrdinal()
@@ -66,7 +65,7 @@ d3.csv('countries_of_world.csv').then(function (data) {
     // Draw 'em!
     populateDropdown(dataset, 'select.x', xAttribute);
     populateDropdown(dataset, 'select.y', yAttribute);
-    createZoom();
+    enableZoom();
     drawAxes(xAxis, yAxis);
     drawCircles(dataset, xScale, yScale, color);
     drawLegends(dataset, color);

@@ -35,6 +35,7 @@ function onCircleClick() {
 function onChangeAxes() {
     xAttribute = d3.select('select.x').property('value');
     yAttribute = d3.select('select.y').property('value');
+    // Change intro text
     d3.select('div.intro p.description span.x').text(xAttribute);
     d3.select('div.intro p.description span.y').text(yAttribute);
     updateAxes(xAttribute, yAttribute);

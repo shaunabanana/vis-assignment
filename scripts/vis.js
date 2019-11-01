@@ -13,24 +13,59 @@ function createScale(dataset, attribute, direction='default', maxlen=0, padding=
 }
 
 
+function createAxis(creator, scale, attribute) {
+    if ( percentages.filter(function (d) { return d == attribute; }).length > 0 ) {
+        return creator(scale).tickFormat(d3.format(".0%"))
+    } else if ( percentagesAlready.filter(function (d) { return d == attribute; }).length > 0 ) {
+        return creator(scale).tickFormat(function (d) { return d + '%' });
+    } else {
+        return creator(scale)
+    }
+}
+
+
 function drawAxes(xAxis, yAxis) {
-    graph.append('g')
-        .attr('class', 'axis y')
-        .attr('transform', 'translate(' + xTransform + ", -" + yTransform + ')')
-        .call( yAxis );
-    graph.append('g')
+    var x = graph.append('g')
         .attr('class', 'axis x')
         .attr('transform', 'translate(0, ' + (graphHeight - yTransform) + ')')
         .call( xAxis );
+    var y = graph.append('g')
+        .attr('class', 'axis y')
+        .attr('transform', 'translate(' + xTransform + ", -" + yTransform + ')')
+        .call( yAxis );
+
+    x.append('text')
+        .attr('class', 'axis-label x')
+        .attr('x', graphWidth)
+        .attr('y', -3)
+        .text(xAttribute);
+
+    y.append('text')
+        .attr('class', 'axis-label y')
+        .attr('x', -yTransform)
+        .attr('y', 13)
+        .attr('transform', 'rotate(-90)')
+        .text(yAttribute);
 }
 
 
 function updateAxes(xAttribute, yAttribute) {
-    // Reset zoom level first to prevent problems
-    graph.select('rect#zoom').transition().duration(600).call(
-        zoom.transform,
-        d3.zoomIdentity.translate(0, 0).scale(1)
+    // Function to check whether zooming has happened. 
+    // Used to skip animation when resetting zoom when no zoom has happened.
+    function zoomHappened() {
+        var transform = d3.zoomTransform(graph.select('rect#zoom').node());
+        return !(transform.x == 0 && transform.y == 0 && transform.k == 1);
+    }
+
+    // Reset zoom level first to prevent problems.
+    graph.select('rect#zoom').transition()
+        .duration( zoomHappened() ? 600 : 0) // If no zoom happened, jump straight to reseted state. Otherwise 600ms animation. 
+        .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(1)
     ).on('end', function () {
+        // Change axes text
+        d3.select('.axis-label.x').text(xAttribute);
+        d3.select('.axis-label.y').text(yAttribute);
+
         // Create updated scales and axes
         var new_xScale = createScale(
             dataset, xAttribute, 
@@ -46,6 +81,8 @@ function updateAxes(xAttribute, yAttribute) {
         );
 
         // Animate update of axes
+        xAxis = createAxis(d3.axisBottom, new_xScale, xAttribute);
+        yAxis = createAxis(d3.axisLeft, new_yScale, yAttribute);
         graph.select('g.axis.x').transition().duration(600).call(xAxis.scale(new_xScale));
         graph.select('g.axis.y').transition().duration(600).call(yAxis.scale(new_yScale));
 
@@ -58,8 +95,8 @@ function updateAxes(xAttribute, yAttribute) {
             .on('end', function() {
                 xScale = new_xScale;
                 yScale = new_yScale;
-                xAxis = d3.axisBottom(new_xScale);
-                yAxis = d3.axisLeft(new_yScale);
+                xAxis = createAxis(d3.axisBottom, new_xScale, xAttribute);
+                yAxis = createAxis(d3.axisLeft, new_yScale, yAttribute);
             })
     })
     
@@ -121,7 +158,7 @@ function populateDropdown(dataset, selector, attribute) {
 }
 
 
-function createZoom() {
+function enableZoom() {
     zoom = d3.zoom()
         .scaleExtent([.5, 20])
         .extent([[xTransform, 0], [graphWidth - 120, graphHeight]])
