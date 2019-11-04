@@ -66,7 +66,7 @@ d3.csv('countries_of_world.csv').then(function (data) {
     populateDropdown(dataset, 'select.x', xAttribute);
     populateDropdown(dataset, 'select.y', yAttribute);
     enableZoom();
-    drawAxes(xAxis, yAxis);
     drawCircles(dataset, xScale, yScale, color);
+    drawAxes(xAxis, yAxis);
     drawLegends(dataset, color);
 })

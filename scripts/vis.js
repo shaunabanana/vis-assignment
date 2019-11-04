@@ -15,11 +15,11 @@ function createScale(dataset, attribute, direction='default', maxlen=0, padding=
 
 function createAxis(creator, scale, attribute) {
     if ( percentages.filter(function (d) { return d == attribute; }).length > 0 ) {
-        return creator(scale).tickFormat(d3.format(".0%"))
+        return creator(scale).tickFormat(d3.format(".2%"));
     } else if ( percentagesAlready.filter(function (d) { return d == attribute; }).length > 0 ) {
-        return creator(scale).tickFormat(function (d) { return d + '%' });
+        return creator(scale).tickFormat(function (d) { return d + '.00%' });
     } else {
-        return creator(scale)
+        return creator(scale);
     }
 }
 
@@ -165,6 +165,7 @@ function enableZoom() {
         .on('zoom', onZoom)
         .on('end', onZoomEnd);
     
+    // Set up clipping
     graph.append("defs").append('clipPath')
         .attr('id', 'clip')
         .append('rect')
@@ -172,6 +173,7 @@ function enableZoom() {
             .attr('height', graphHeight)
             .attr('transform', 'translate(' + xTransform + ', -' + yTransform + ')')
 
+    // Set up zoom area
     graph.append("rect")
         .attr('id', 'zoom')
         .attr('width', graphWidth)
