@@ -17,21 +17,6 @@ var xAxis, yAxis;
 var zoom;
 
 
-// Controls the spacing between points and axis
-var spacing = 20;
-// Controls the left and bottom margin of the graph
-var xTransform = 65;
-var yTransform = 20;
-// Define colors and axis attributes here.
-var colorBy = 'Region';
-var tooltipBy = 'Country';
-var xAttribute = 'Birth Rate';
-var yAttribute = 'Death Rate';
-// Which columns are supposed to be rendered as percentages
-var percentages = ['Birth Rate', 'Death Rate', 'Infant mortality', 'Literacy Rate', 'Agriculture', 'Industry', 'Service'];
-var percentagesAlready = ['Arable land (%)', 'Crops land (%)', 'Other land (%)'];
-
-
 d3.csv('countries_of_world.csv').then(function (data) {
     // Save loaded data
     dataset = data;

@@ -1,3 +1,8 @@
+function splitCamelCase(s) {
+    return s.replace(/([A-Z])/g, ' $1').trim();
+}
+
+
 function axisMin(dataset, axis) {
     var min = Number.MAX_VALUE;
     for (var i = 0; i < dataset.length; i ++) {

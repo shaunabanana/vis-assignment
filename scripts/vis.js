@@ -128,7 +128,7 @@ function drawLegends(dataset, color) {
     sel.append('div')
         .attr('class', 'legend-circle')
         .style('background', function (d) { return color(d) });
-    sel.append('span').text(function (d) { return d; });
+    sel.append('span').text(function (d) { return splitCamelCase(d); });
 }
 
 

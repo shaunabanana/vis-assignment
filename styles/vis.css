@@ -48,6 +48,7 @@ svg.graph {
     font-size: 14px;
     transform: translate(calc(-50% - 2px), calc(-100% - 7px));
     display: none;
+    opacity: 0;
 }
 
 .tooltip .smalltext {
